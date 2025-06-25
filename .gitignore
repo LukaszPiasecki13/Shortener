@@ -1,0 +1,10 @@
+.vscode/launch.json
+*.pyc
+backend/db.sqlite3
+.idea/.gitignore
+.idea/markdown.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/Rekrutacja_Szkola_Shortener.iml
+.idea/vcs.xml
+.idea/inspectionProfiles/profiles_settings.xml
