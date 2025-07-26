@@ -55,7 +55,7 @@ class ShortenURL(APIView):
 
 
 class ThrottleStatusView(APIView):
-    
+
     def get(self, request):
         throttle = AnonRateThrottle()
         throttle.parse_rate(throttle.rate)
@@ -83,3 +83,5 @@ class ThrottleStatusView(APIView):
             'remaining': remaining,
             'reset_in_seconds': int(reset_in),
         })
+
+    
