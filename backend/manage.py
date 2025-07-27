@@ -6,8 +6,8 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    env = os.environ.get('PROD', 'DEV')
-    if env == 'PROD':
+    prod = os.environ.get('PROD', False)
+    if prod:
         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings.prod')
     else:
         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings.base')
