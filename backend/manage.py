@@ -6,11 +6,8 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    prod = os.environ.get('PROD', False)
-    if prod:
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings.prod')
-    else:
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings.base')
+    settings_module = 'core.settings.prod' if 'RENDER_EXTERNAL_HOSTNAME' in os.environ else 'core.settings.dev'
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', settings_module)
 
     try:
         from django.core.management import execute_from_command_line
