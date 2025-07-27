@@ -84,4 +84,15 @@ class ThrottleStatusView(APIView):
             'reset_in_seconds': int(reset_in),
         })
 
-    
+class RedirectShortURLView(APIView):
+    def get(self, request, short_code):
+        if request.build_absolute_uri()[-1] == '/': 
+            shortened_url = request.build_absolute_uri()[:-1] 
+        else:
+            shortened_url = request.build_absolute_uri()
+        shortened_url_obj = get_object_or_404(ShortenedURL, shortened_url=shortened_url)
+        
+        return Response({
+            'original_url': shortened_url_obj.original_url,
+            'shortened_url': shortened_url_obj.shortened_url,
+        })
