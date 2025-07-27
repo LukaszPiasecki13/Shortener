@@ -7,6 +7,8 @@ import sys
 def main():
     """Run administrative tasks."""
     settings_module = 'core.settings.prod' if 'RENDER_EXTERNAL_HOSTNAME' in os.environ else 'core.settings.dev'
+    
+    print("Using settings moduleXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:", settings_module)
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', settings_module)
 
     try:
