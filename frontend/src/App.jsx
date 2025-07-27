@@ -37,7 +37,8 @@ export default function App() {
   const [throttleStatus, setThrottleStatus] = useState(null);
   const [secondsLeft, setSecondsLeft] = useState(null);
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+// const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+ const API_BASE_URL = 'https://shortener-z3bg.onrender.com/'
 
   useEffect(() => {
     fetchThrottleStatus();
