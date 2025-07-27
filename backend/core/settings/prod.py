@@ -2,8 +2,6 @@ import os
 from .base import *
 import dj_database_url
 
-print("Production settings loaded. XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX: ", ROOT_URLCONF)
-
 DEBUG = os.environ.get('DEBUG', default=False)
 SECRET_KEY = os.environ.get('SECRET_KEY')
 ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME')]
