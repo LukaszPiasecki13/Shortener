@@ -6,6 +6,7 @@ pip3 install django
 pip install djangorestframework
 pip install django-cors-headers
 pip install psycopg2-binary
+pip install whitenoise
 pip install gunicorn
 pip install uvicorn
 
