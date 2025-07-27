@@ -42,14 +42,12 @@ export default function App() {
   useEffect(() => {
     fetchThrottleStatus();
   }, []);
-  
-
 
   useEffect(() => {
     if (secondsLeft <= 0) return;
 
     const interval = setInterval(() => {
-      setSecondsLeft(prev => {
+      setSecondsLeft((prev) => {
         const newValue = prev - 1;
         if (newValue <= 0) clearInterval(interval);
         return newValue;
@@ -59,10 +57,9 @@ export default function App() {
     return () => clearInterval(interval);
   }, [secondsLeft]);
 
-
   const fetchThrottleStatus = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/throttle-status/`);
+      const response = await fetch(`${API_BASE_URL}/throttle-status/`);
       if (response.ok) {
         const data = await response.json();
         setThrottleStatus(data);
@@ -85,7 +82,7 @@ export default function App() {
     setSuccess("");
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/shorten/`, {
+      const response = await fetch(`${API_BASE_URL}/shorten/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ original_url: originalUrl }),
@@ -120,7 +117,7 @@ export default function App() {
 
     try {
       const response = await fetch(
-        `${API_BASE_URL}/api/shorten/?shortened_url=${encodeURIComponent(
+        `${API_BASE_URL}/shorten/?shortened_url=${encodeURIComponent(
           searchUrl
         )}`
       );
@@ -306,27 +303,54 @@ export default function App() {
                       <Space>
                         <CheckCircleOutlined className="result-icon" />
                         <Text strong className="result-title">
-                          Your shortened URLL:
+                          Your shortened URL:
                         </Text>
                       </Space>
                     }
                   >
-                    <Input
-                      size="large"
-                      readOnly
-                      value={shortenedUrl}
-                      className="result-input"
-                      addonAfter={
+                    <div className="result-container">
+                      <Input
+                        size="large"
+                        readOnly
+                        value={shortenedUrl}
+                        className="result-input"
+                        addonAfter={
+                          <Button
+                            icon={<CopyOutlined />}
+                            onClick={() => copyToClipboard(shortenedUrl)}
+                            type="text"
+                            className="copy-button"
+                          >
+                            Copy
+                          </Button>
+                        }
+                      />
+                      <div style={{ marginTop: 8 }}>
                         <Button
-                          icon={<CopyOutlined />}
-                          onClick={() => copyToClipboard(shortenedUrl)}
-                          type="text"
-                          className="copy-button"
+                          type="link"
+                          onClick={async () => {
+                            try {
+                              const response = await fetch(shortenedUrl);
+                              if (!response.ok) {
+                                throw new Error(
+                                  "Failed to redirect to the shortened URL"
+                                );
+                              }
+                              const data = await response.json();
+                              const originalUrl = data.original_url;
+                              window.open(originalUrl, "_blank");
+                            } catch (error) {
+                              console.error(
+                                "Error opening shortened URL:",
+                                error
+                              );
+                            }
+                          }}
                         >
-                          Coppy
+                          Open shortened URL
                         </Button>
-                      }
-                    />
+                      </div>
+                    </div>
                   </Card>
                 )}
               </Card>
@@ -366,9 +390,7 @@ export default function App() {
                     loading={searchLoading}
                     icon={<SearchOutlined />}
                   >
-                    {searchLoading
-                      ? "Searching..."
-                      : "Find oryginal URL"}
+                    {searchLoading ? "Searching..." : "Find oryginal URL"}
                   </Button>
                 </form>
 
@@ -414,9 +436,16 @@ export default function App() {
 
           <div className="footer">
             <Text className="footer-text">
-              ✨ <a href="https://github.com/LukaszPiasecki13" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline' }}>
+              ✨{" "}
+              <a
+                href="https://github.com/LukaszPiasecki13"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "inherit", textDecoration: "underline" }}
+              >
                 Lukasz Piasecki
-              </a> - Python Developer ✨
+              </a>{" "}
+              - Software/Python Developer ✨
             </Text>
           </div>
         </div>
