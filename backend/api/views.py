@@ -9,6 +9,7 @@ from django.core.cache import cache
 from .lib.utils import create_shorten_url
 from .serializers import ShortenURLSerializer
 from .models import ShortenedURL
+from .throttling import RealIPAnonRateThrottle
 
 
 class ShortenURL(APIView):
@@ -100,11 +101,3 @@ class RedirectShortURLView(APIView):
         })
     
 
-class RealIPAnonRateThrottle(AnonRateThrottle):
-    def get_ident(self, request):
-        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        if x_forwarded_for:
-            ip = x_forwarded_for.split(',')[0].strip()
-        else:
-            ip = request.META.get('REMOTE_ADDR')
-        return ip
