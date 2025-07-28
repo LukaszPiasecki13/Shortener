@@ -13,7 +13,7 @@ from .throttling import RealIPAnonRateThrottle
 
 
 class ShortenURL(APIView):
-    throttle_classes = [AnonRateThrottle]
+    throttle_classes = [RealIPAnonRateThrottle]
 
     def post(self, request) -> Response:
         """
