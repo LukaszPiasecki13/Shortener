@@ -59,7 +59,7 @@ class ThrottleStatusView(APIView):
     
 
     def get(self, request):
-
+        from django.core.cache import cache
         throttle = RealIPAnonRateThrottle()
         throttle.parse_rate(throttle.rate)
 
@@ -70,6 +70,7 @@ class ThrottleStatusView(APIView):
         history = cache.get(cache_key)
         now = time.time()
         duration = throttle.duration  
+        
         print(f"Cache key: {cache_key}, history: {history}")
         print("Throttle rate:", throttle.rate)
         print("Throttle num_requests:", throttle.num_requests)
@@ -78,7 +79,7 @@ class ThrottleStatusView(APIView):
         print("History from cache:", history)
         
         print('---------------------------------------------------------------')
-        from django.core.cache import cache
+        
         cache.set('foo', 'bar', timeout=60)
         print(cache.get('foo'))  # Powinno wypisać 'bar'
 
