@@ -55,10 +55,11 @@ class ShortenURL(APIView):
 
 
 class ThrottleStatusView(APIView):
+    
 
     def get(self, request):
 
-        throttle = AnonRateThrottle()
+        throttle = RealIPAnonRateThrottle()
         throttle.parse_rate(throttle.rate)
 
         cache_key = throttle.get_cache_key(request, self)
@@ -97,3 +98,13 @@ class RedirectShortURLView(APIView):
             'original_url': shortened_url_obj.original_url,
             'shortened_url': shortened_url_obj.shortened_url,
         })
+    
+
+class RealIPAnonRateThrottle(AnonRateThrottle):
+    def get_ident(self, request):
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0].strip()
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
