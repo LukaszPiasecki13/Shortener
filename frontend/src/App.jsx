@@ -39,6 +39,7 @@ export default function App() {
 
 
  const API_BASE_URL = 'https://shortener-z3bg.onrender.com'
+// const API_BASE_URL = "http://localhost:8000"; // Uncomment for local development
 
   useEffect(() => {
     fetchThrottleStatus();

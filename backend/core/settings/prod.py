@@ -27,3 +27,4 @@ REST_FRAMEWORK = {
         'anon': '20/hour',
     }
 }
+
