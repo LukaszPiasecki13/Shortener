@@ -447,7 +447,7 @@ export default function App() {
               >
                 Lukasz Piasecki
               </a>{" "}
-              - Software/Python Developer ✨
+              - Python Software Engineer ✨
             </Text>
           </div>
         </div>
