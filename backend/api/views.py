@@ -70,18 +70,6 @@ class ThrottleStatusView(APIView):
         history = cache.get(cache_key)
         now = time.time()
         duration = throttle.duration  
-        
-        print(f"Cache key: {cache_key}, history: {history}")
-        print("Throttle rate:", throttle.rate)
-        print("Throttle num_requests:", throttle.num_requests)
-        print("Throttle duration:", throttle.duration)
-        print("Cache key:", cache_key)
-        print("History from cache:", history)
-        
-        print('---------------------------------------------------------------')
-        
-        cache.set('foo', 'bar', timeout=60)
-        print(cache.get('foo'))  # Powinno wypisać 'bar'
 
 
         if history is None or len(history) == 0:
