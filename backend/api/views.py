@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -95,9 +95,6 @@ class RedirectShortURLView(APIView):
             shortened_url = request.build_absolute_uri()
         shortened_url_obj = get_object_or_404(ShortenedURL, shortened_url=shortened_url)
         
-        return Response({
-            'original_url': shortened_url_obj.original_url,
-            'shortened_url': shortened_url_obj.shortened_url,
-        })
+        return redirect(shortened_url_obj.original_url)
     
 

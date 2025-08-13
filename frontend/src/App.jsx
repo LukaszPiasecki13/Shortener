@@ -22,6 +22,7 @@ import {
   CheckCircleOutlined,
 } from "@ant-design/icons";
 import "./App.css";
+import { Analytics } from "@vercel/analytics/react";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -37,9 +38,8 @@ export default function App() {
   const [throttleStatus, setThrottleStatus] = useState(null);
   const [secondsLeft, setSecondsLeft] = useState(null);
 
-
- const API_BASE_URL = 'https://shortener-z3bg.onrender.com'
-// const API_BASE_URL = "http://localhost:8000"; // Uncomment for local development
+  const API_BASE_URL = "https://shortener-z3bg.onrender.com"; // I know this is not the best practice, but variable in Vercel is not
+  // const API_BASE_URL = "http://localhost:8000/"; // Local development URL
 
   useEffect(() => {
     fetchThrottleStatus();
@@ -82,6 +82,13 @@ export default function App() {
     setLoading(true);
     setError("");
     setSuccess("");
+    setShortenedUrl("");
+
+    const serverWakeTimeout = setTimeout(() => {
+      setSuccess(
+        "⚡ Server is still waking up...(it's a free serv for presentation)... please wait"
+      );
+    }, 3000);
 
     try {
       const response = await fetch(`${API_BASE_URL}/shorten/`, {
@@ -102,6 +109,7 @@ export default function App() {
     } catch {
       setError("Server connection error");
     } finally {
+      clearTimeout(serverWakeTimeout);
       setLoading(false);
     }
   };
@@ -311,47 +319,19 @@ export default function App() {
                     }
                   >
                     <div className="result-container">
-                      <Input
-                        size="large"
-                        readOnly
-                        value={shortenedUrl}
-                        className="result-input"
-                        addonAfter={
-                          <Button
-                            icon={<CopyOutlined />}
-                            onClick={() => copyToClipboard(shortenedUrl)}
-                            type="text"
-                            className="copy-button"
+                      {shortenedUrl ? (
+                        <Text className="result-text">
+                          <a
+                            href={shortenedUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
                           >
-                            Copy
-                          </Button>
-                        }
-                      />
-                      <div style={{ marginTop: 8 }}>
-                        <Button
-                          type="link"
-                          onClick={async () => {
-                            try {
-                              const response = await fetch(shortenedUrl);
-                              if (!response.ok) {
-                                throw new Error(
-                                  "Failed to redirect to the shortened URL"
-                                );
-                              }
-                              const data = await response.json();
-                              const originalUrl = data.original_url;
-                              window.open(originalUrl, "_blank");
-                            } catch (error) {
-                              console.error(
-                                "Error opening shortened URL:",
-                                error
-                              );
-                            }
-                          }}
-                        >
-                          Open shortened URL
-                        </Button>
-                      </div>
+                            {shortenedUrl}
+                          </a>
+                        </Text>
+                      ) : (
+                        <Text type="secondary">No URL generated yet</Text>
+                      )}
                     </div>
                   </Card>
                 )}
@@ -409,22 +389,43 @@ export default function App() {
                       </Space>
                     }
                   >
-                    <Input
-                      size="large"
-                      readOnly
-                      value={foundOriginalUrl}
-                      className="search-result-input"
-                      addonAfter={
+                    <div
+                      className="search-result-container"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      {foundOriginalUrl ? (
+                        <Text
+                          className="search-result-text"
+                          ellipsis={{ tooltip: foundOriginalUrl }}
+                          style={{ flex: 1, marginRight: 8 }}
+                        >
+                          <a
+                            href={foundOriginalUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {foundOriginalUrl}
+                          </a>
+                        </Text>
+                      ) : (
+                        <Text type="secondary">No URL found</Text>
+                      )}
+
+                      {foundOriginalUrl && (
                         <Button
                           icon={<CopyOutlined />}
                           onClick={() => copyToClipboard(foundOriginalUrl)}
                           type="text"
                           className="search-copy-button"
                         >
-                          Coppy
+                          Copy
                         </Button>
-                      }
-                    />
+                      )}
+                    </div>
                   </Card>
                 )}
               </Card>
@@ -451,6 +452,9 @@ export default function App() {
             </Text>
           </div>
         </div>
+      </div>
+      <div>
+        <Analytics />
       </div>
     </div>
   );
